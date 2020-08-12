@@ -260,10 +260,11 @@ def get_connection(secret_dict):
     """
     # Parse and validate the secret JSON string
     port = str(secret_dict['port']) if 'port' in secret_dict else '1521'
+    dsnStr = cx_Oracle.makedsn(secret_dict['host'], port, secret_dict['dbname'])
 
     # Try to obtain a connection to the db
     try:
-        conn = cx_Oracle.connect(secret_dict['username'] + '/' + secret_dict['password'] + '@' + secret_dict['host'] + ':' + port + '/' + secret_dict['dbname'])
+        conn = cx_Oracle.connect(user= secret_dict['username'],password= secret_dict['password'],dsn=dsnStr)
         return conn
     except (cx_Oracle.DatabaseError, cx_Oracle.OperationalError) :
         return None
